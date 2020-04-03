@@ -15,6 +15,7 @@ class Wine extends Model
         'nome',
         'prezzo',
         'voto',
-        'annata'
+        'annata',
+        'updated_at'
     ];
 }
