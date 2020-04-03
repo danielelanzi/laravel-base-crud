@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wine extends Model
 {
-    protected $fillabale = 
-    [
+    protected $fillable = [
         'categoria',
         'colore',
         'tipologia',
@@ -16,6 +15,6 @@ class Wine extends Model
         'prezzo',
         'voto',
         'annata',
-        'updated_at'
+        'created_at'
     ];
 }

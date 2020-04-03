@@ -22,7 +22,7 @@ class CreateWineTable extends Migration
             $table->string('nome');
             $table->float('prezzo', 8, 2);
             $table->float('voto', 2, 0);
-            $table->string('annata');
+            $table->string('year');
             $table->timestamps();
         });
     }

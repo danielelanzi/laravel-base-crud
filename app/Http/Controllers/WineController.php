@@ -7,6 +7,18 @@ use App\Wine;
 
 class WineController extends Controller
 {
+
+    protected $validationWine = [
+        'categoria' => 'required|string|max:255',
+        'colore' => 'required|string|max:255',
+        'tipologia' => 'required|string|max:255',
+        'regione' => 'required|string|max:255',
+        'nome' => 'required|string|max:255',
+        'prezzo' => 'required|numeric|min:1|max:999',
+        'voto' => 'required|numeric|min:1|max:10',
+        'annata' => 'required|date',
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -54,22 +66,23 @@ class WineController extends Controller
 
 
 
-        $wine = new Wine;
+        $newWine = new Wine;
 
-        // $wine->categoria = $data['categoria'];
-        // $wine->colore = $data['colore'];
-        // $wine->tipologia = $data['tipologia'];
-        // $wine->regione = $data['regione'];
-        // $wine->nome = $data['nome'];
-        // $wine->prezzo = $data['prezzo'];
-        // $wine->voto = $data['voto'];
-        // $wine->annata = $data['annata'];
+        // $newWine->categoria = $data['categoria'];
+        // $newWine->colore = $data['colore'];
+        // $newWine->tipologia = $data['tipologia'];
+        // $newWine->regione = $data['regione'];
+        // $newWine->nome = $data['nome'];
+        // $newWine->prezzo = $data['prezzo'];
+        // $newWine->voto = $data['voto'];
+        // $newWine->annata = $data['annata'];
+        // dd($newWine);
 
-        $wine->fill($data);
-        $save = $wine->save();
-
+        $newWine->fill($data);
         
-        if ($save == true) {
+        $saved = $newWine->save();
+        
+        if ($saved) {
 
             // $shoe = Shoe::orderBy('id','desc')->first();
 
@@ -128,7 +141,18 @@ class WineController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $wine = Wine::find($id);
+        if (empty($wine)) {
+            abort('404');
+        }
+
+        $data = $request->all();
+        $request->validate($this->validationWine);
+        $updated = $wine->update($data);
+        if ($updated) {
+            $wine = Wine::find($id);
+            return redirect()->route('wines.show', compact('wine'));
+        }
     }
 
     /**
@@ -137,8 +161,16 @@ class WineController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Wine $wine)
     {
-        //
+        $id = $wine->id;
+        $deleted = $wine->delete();
+        // $data = [
+        //     'id' => $id,
+        //     'wines' => Wine::all()
+        // ];
+
+        // return view('wines.index', $data);
+        return redirect()->route('wines.index')->with('id', $id);
     }
 }
